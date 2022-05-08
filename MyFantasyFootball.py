@@ -14,8 +14,7 @@ def getAAV(year, ppr='1', keeper='N'):
         K = Keeper leagues
         R = Rookie-only draft league
     """
-    'https://api.myfantasyleague.com/2022/export?TYPE=aav&PERIOD=&IS_PPR=1&IS_KEEPER=N&JSON=1'
-    url = 'https://api.https://api.myfantasyleague.com/' + year
+    url = 'https://api.myfantasyleague.com/' + year
     url += '/export?TYPE=aav&IS_PPR=' + ppr
     url += '&IS_KEEPER=' + keeper
     url += '&JSON=1'
@@ -54,6 +53,32 @@ def getADP(year, teams='10', ppr='1', keeper='N', mock='0',cutoff='5'):
     results = requests.get(url=url)
     results = results.json()
     results = results['adp']['player']
+    results = pd.DataFrame.from_dict(data=results)
+    return results
+
+def getByeWeeks(year):
+    """
+    Go to https://api.myfantasyleague.com/2022/api_info?STATE=details# for more details.
+    year:   NFL season you're requesting data for. January 2022 will be part of the 2021 season.
+    """
+    url = 'https://api.myfantasyleague.com/' + year
+    url += '/export?TYPE=nflByeWeeks&JSON=1'
+    results = requests.get(url=url)
+    results = results.json()
+    results = results['nflByeWeeks']['team']
+    results = pd.DataFrame.from_dict(data=results)
+    return results
+
+def getInjuries(year):
+    """
+    Go to https://api.myfantasyleague.com/2022/api_info?STATE=details# for more details.
+    year:   NFL season you're requesting data for. January 2022 will be part of the 2021 season.
+    """
+    url = 'https://api.myfantasyleague.com/' + year
+    url += '/export?TYPE=injuries&JSON=1'
+    results = requests.get(url=url)
+    results = results.json()
+    results = results['injuries']['injury']
     results = pd.DataFrame.from_dict(data=results)
     return results
 
