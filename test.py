@@ -1,8 +1,10 @@
-import MyFantasyFootball
+import MyFantasyLeague as mfl
+import FantasyFootballCalculator as ffc
+import pandas as pd
 
-aav = MyFantasyFootball.getAAV('2022')
-adp = MyFantasyFootball.getADP('2022')
-byes = MyFantasyFootball.getByeWeeks('2022')
-injuries = MyFantasyFootball.getInjuries('2022')
-players = MyFantasyFootball.getPlayers('2022')
-ranks = MyFantasyFootball.getRanks('2022')
+aav = mfl.getAAV('2022')
+adp = mfl.getADP('2022')
+byes = mfl.getByeWeeks('2022')
+injuries = mfl.getInjuries('2022')
+players = mfl.getPlayers('2022')
+ranks = mfl.getRanks('2022')

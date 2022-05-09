@@ -1,5 +1,5 @@
 import requests
-import pandas as pd
+from pandas import DataFrame
 
 def getAAV(year, ppr='1', keeper='N'):
     """
@@ -21,7 +21,7 @@ def getAAV(year, ppr='1', keeper='N'):
     results = requests.get(url=url)
     results = results.json()
     results = results['aav']['player']
-    results = pd.DataFrame.from_dict(data=results)
+    results = DataFrame.from_dict(data=results)
     return results
 
 def getADP(year, teams='10', ppr='1', keeper='N', mock='0',cutoff='5'):
@@ -53,7 +53,7 @@ def getADP(year, teams='10', ppr='1', keeper='N', mock='0',cutoff='5'):
     results = requests.get(url=url)
     results = results.json()
     results = results['adp']['player']
-    results = pd.DataFrame.from_dict(data=results)
+    results = DataFrame.from_dict(data=results)
     return results
 
 def getByeWeeks(year):
@@ -66,7 +66,7 @@ def getByeWeeks(year):
     results = requests.get(url=url)
     results = results.json()
     results = results['nflByeWeeks']['team']
-    results = pd.DataFrame.from_dict(data=results)
+    results = DataFrame.from_dict(data=results)
     return results
 
 def getInjuries(year):
@@ -79,7 +79,7 @@ def getInjuries(year):
     results = requests.get(url=url)
     results = results.json()
     results = results['injuries']['injury']
-    results = pd.DataFrame.from_dict(data=results)
+    results = DataFrame.from_dict(data=results)
     return results
 
 def getPlayers(year):
@@ -92,7 +92,7 @@ def getPlayers(year):
     results = requests.get(url=url)
     results = results.json()
     results = results['players']['player']
-    results = pd.DataFrame.from_dict(data=results)
+    results = DataFrame.from_dict(data=results)
     return results
 
 def getRanks(year, pos=''):
@@ -107,5 +107,5 @@ def getRanks(year, pos=''):
     results = requests.get(url=url)
     results = results.json()
     results = results['player_ranks']['player']
-    results = pd.DataFrame.from_dict(data=results)
+    results = DataFrame.from_dict(data=results)
     return results
