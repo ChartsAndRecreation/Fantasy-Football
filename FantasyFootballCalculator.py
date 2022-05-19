@@ -13,7 +13,7 @@ def getADP(year, scoring='half-ppr', teams='10'):
     url += '/' + teams
     url += '-team/all/' + year
     results = requests.get(url=url)
-    results = Soup(results.text)
+    results = Soup(markup = results.text, features = 'html.parser')
     results = results.find_all('table')
     results = results[0]
     results = results.find_all('tr')
