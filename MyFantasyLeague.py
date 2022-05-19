@@ -1,5 +1,6 @@
 import requests
-from pandas import DataFrame
+import pandas as pd
+import datetime as dt
 
 def getAAV(year, ppr='1', keeper='N'):
     """
@@ -21,7 +22,7 @@ def getAAV(year, ppr='1', keeper='N'):
     results = requests.get(url=url)
     results = results.json()
     results = results['aav']['player']
-    results = DataFrame.from_dict(data=results)
+    results = pd.DataFrame.from_dict(data=results)
     return results
 
 def getADP(year, teams='10', ppr='1', keeper='N', mock='0',cutoff='5'):
@@ -53,7 +54,7 @@ def getADP(year, teams='10', ppr='1', keeper='N', mock='0',cutoff='5'):
     results = requests.get(url=url)
     results = results.json()
     results = results['adp']['player']
-    results = DataFrame.from_dict(data=results)
+    results = pd.DataFrame.from_dict(data=results)
     return results
 
 def getByeWeeks(year):
@@ -66,7 +67,7 @@ def getByeWeeks(year):
     results = requests.get(url=url)
     results = results.json()
     results = results['nflByeWeeks']['team']
-    results = DataFrame.from_dict(data=results)
+    results = pd.DataFrame.from_dict(data=results)
     return results
 
 def getInjuries(year):
@@ -79,7 +80,7 @@ def getInjuries(year):
     results = requests.get(url=url)
     results = results.json()
     results = results['injuries']['injury']
-    results = DataFrame.from_dict(data=results)
+    results = pd.DataFrame.from_dict(data=results)
     return results
 
 def getPlayers(year):
@@ -92,7 +93,7 @@ def getPlayers(year):
     results = requests.get(url=url)
     results = results.json()
     results = results['players']['player']
-    results = DataFrame.from_dict(data=results)
+    results = pd.DataFrame.from_dict(data=results)
     return results
 
 def getRanks(year, pos=''):
@@ -107,5 +108,25 @@ def getRanks(year, pos=''):
     results = requests.get(url=url)
     results = results.json()
     results = results['player_ranks']['player']
-    results = DataFrame.from_dict(data=results)
+    results = pd.DataFrame.from_dict(data=results)
     return results
+
+def combineData(year):
+    aav = getAAV(year)
+    adp = getADP(year)
+    byes = getByeWeeks(year)
+    injuries = getInjuries(year)
+    players = getPlayers(year)
+    ranks = getRanks(year)
+    all_data = players.merge(right=byes, how='left', left_on='team',
+        right_on='id', suffixes=(None,'_duplicate')
+        ).filter(regex='^(?!.*_duplicate)')
+    all_data = all_data.merge(right=ranks, how='left', on='id')
+    all_data = all_data.merge(right=aav, how='left', on='id',
+        suffixes=(None,'_aav'))
+    all_data = all_data.merge(right=adp, how='left', on='id',
+        suffixes=(None,'_adp'))
+    all_data = all_data.merge(right=injuries, how='left', on='id',
+        suffixes=(None,'_injury'))
+    all_data['experience'] = dt.date.today().year - all_data['draft_year'].astype(int)
+    return all_data
